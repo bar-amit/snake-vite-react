@@ -2,6 +2,16 @@
   display: grid;
 }
 
+.game_over_overlay {
+  position: relative;
+  left: -400px;
+  width: 400px;
+  height: 400px;
+  background-color: rgba(158, 69, 69, 0.6);
+  color: blueviolet;
+  font-size: 72px;
+}
+
 .cell {
   width: 40px;
   height: 40px;
