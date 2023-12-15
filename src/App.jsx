@@ -42,8 +42,29 @@ function game_over(){
   clearInterval(game_interval);
 }
 
-function move_snake(){
+function is_lost(new_cell){
+  return new_cell[0]>=board_size || new_cell[0]<0 ||
+  new_cell[1]>=board_size || new_cell[1]<0 ||
+  board[new_cell[0]][new_cell[1]]==cell_types['snake'];
+}
+
+function add_new_cell(new_cell){
   remove_snake();
+  if(board[new_cell[0]][new_cell[1]]!=cell_types['food'])
+  {
+    snake.shift();
+    snake.push(new_cell);
+    draw_snake();
+  }
+  else
+  {
+    snake.push(new_cell);
+    draw_snake();
+    random_food();
+  }
+}
+
+function move_snake(){
   let new_cell = Array.from(snake[snake.length-1]);
   switch(direction){
     case 'left':
@@ -59,30 +80,18 @@ function move_snake(){
       new_cell[0]++;
       break;
   }
-  if (new_cell[0]>=board_size || new_cell[0]<0 ||
-    new_cell[1]>=board_size || new_cell[1]<0 ||
-    board[new_cell[0]][new_cell[1]]==cell_types['snake'])
+  if(is_lost(new_cell))
   {
     game_over();
     return;
   }
-  if(board[new_cell[0]][new_cell[1]]!=cell_types['food'])
-  {
-    snake.shift();
-    snake.push(new_cell);
-    draw_snake();
-  }
-  else{
-    snake.push(new_cell);
-    draw_snake();
-    random_food();
-  }
+  add_new_cell(new_cell);
 }
 
 function handle_arrow(e){
   switch(e.key){
     case 'ArrowUp':
-      direction = 'up'
+      direction = 'up';
       break;
     case 'ArrowDown':
       direction = 'down';
@@ -107,8 +116,8 @@ let lost;
 function App() {
   const [game_board, set_game_board] = useState(draw_board());
 
-  function handle_start(e){
-    e.currentTarget.disabled = true;
+  function handle_start(event){
+    event.currentTarget.disabled = true;
     lost = false;
     draw_snake();
     random_food();
