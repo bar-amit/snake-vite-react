@@ -118,6 +118,7 @@ function App() {
 
   function handle_start(event){
     event.currentTarget.disabled = true;
+    event.currentTarget.blur();
     lost = false;
     draw_snake();
     random_food();
