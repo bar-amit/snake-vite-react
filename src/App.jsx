@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './App.css'
 
 let cell_types = {empty: '0', snake: '1', food: '2'};
@@ -36,10 +36,9 @@ function remove_snake(){
 }
 
 function game_over(){
-  board = init_board;
-  snake = init_snake;
   lost = true;
   clearInterval(game_interval);
+  start_ref.current.disabled = false;
 }
 
 function is_lost(new_cell){
@@ -106,20 +105,26 @@ function handle_arrow(e){
 }
 
 let board = init_board;
-let snake = init_snake;
-let direction = 'right';
+let snake;
+let direction;
 let game_interval;
 let lost;
+let start_ref;
 
 // use ? https://v2.grommet.io/starter
 
 function App() {
   const [game_board, set_game_board] = useState(draw_board());
+  start_ref = useRef(null);
 
   function handle_start(event){
     event.currentTarget.disabled = true;
     event.currentTarget.blur();
+    board = init_board;
+    snake = Array.from(init_snake);
+    direction = 'right';
     lost = false;
+    remove_snake();
     draw_snake();
     random_food();
     set_game_board(draw_board());
@@ -139,7 +144,7 @@ function App() {
         {game_board}
       </div>
       {lost && <div className='game_over_overlay'>Game Over</div>}
-      <button type="button" onClick={handle_start}>Start</button>
+      <button type="button" onClick={handle_start} ref={start_ref}>Start</button>
     </>
   )
 }
