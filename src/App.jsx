@@ -111,8 +111,6 @@ let game_interval;
 let lost;
 let start_ref;
 
-// use ? https://v2.grommet.io/starter
-
 function App() {
   const [game_board, set_game_board] = useState(draw_board());
   start_ref = useRef(null);
